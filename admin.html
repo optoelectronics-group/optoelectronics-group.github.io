@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>实验室预约管理后台</title>
+    <link rel="stylesheet" href="./styles.css?v=20260703b" />
+  </head>
+  <body data-page="admin">
+    <div class="admin-shell">
+      <header class="admin-header">
+        <div>
+          <p class="eyebrow">Admin</p>
+          <h1>预约记录管理</h1>
+          <p class="muted">当前版本未接登录，仅提供管理页面入口与筛选 API。</p>
+        </div>
+        <a class="ghost-btn link-btn" href="./index.html">返回预约页</a>
+      </header>
+
+      <section class="panel admin-panel">
+        <div class="diagnostics-panel admin-diagnostics">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">连接自检</p>
+              <h3>管理员页接口状态</h3>
+            </div>
+          </div>
+          <div id="diagnostics-grid" class="diagnostics-grid"></div>
+        </div>
+
+        <div class="filters" id="admin-filters">
+          <select id="admin-lab-id">
+            <option value="">全部实验室</option>
+          </select>
+          <select id="admin-item-id">
+            <option value="">全部项目</option>
+          </select>
+          <input id="admin-q" type="text" placeholder="预约人 / 学号关键词" />
+          <input id="admin-start" type="date" />
+          <input id="admin-end" type="date" />
+          <select id="admin-remark-type">
+            <option value="">全部备注</option>
+            <option value="培训">培训</option>
+            <option value="参观">参观</option>
+            <option value="在有人陪同下的代预约">在有人陪同下的代预约</option>
+            <option value="检修中">检修中</option>
+            <option value="其他">其他</option>
+          </select>
+          <select id="admin-status">
+            <option value="">全部状态</option>
+            <option value="active">active</option>
+            <option value="cancelled">cancelled</option>
+          </select>
+          <button id="admin-search" class="primary-btn">查询</button>
+          <button id="admin-export" class="ghost-btn">导出 CSV</button>
+        </div>
+
+        <p id="admin-message" class="message"></p>
+
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>预约时间</th>
+                <th>实验室</th>
+                <th>预约项目</th>
+                <th>预约人</th>
+                <th>学号</th>
+                <th>备注</th>
+                <th>状态</th>
+                <th>提醒状态</th>
+                <th>提交时间</th>
+              </tr>
+            </thead>
+            <tbody id="admin-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js?v=20260703d"></script>
+  </body>
+</html>
+

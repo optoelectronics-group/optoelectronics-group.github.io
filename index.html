@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>实验室预约管理系统</title>
+    <link rel="stylesheet" href="./styles.css?v=20260703b" />
+  </head>
+  <body data-page="booking">
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <p class="eyebrow">GitHub Pages MVP</p>
+          <h1>实验室预约管理系统</h1>
+          <p>西溪校区西六实验室</p>
+        </div>
+        <nav class="nav">
+          <a href="#home">首页</a>
+          <a href="#rules">实验室规则</a>
+          <a href="#booking" class="active">实验预约</a>
+          <a href="#safety">安全培训及准入</a>
+          <a href="#equipment">设备培训</a>
+          <a href="#contacts">常用联系方式</a>
+          <a href="./admin.html">管理员页面</a>
+        </nav>
+        <div class="sidebar-note">
+          <p>当前版本重点实现预约与看板，其余栏目为占位内容，便于后续扩展。</p>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="hero" id="home">
+          <div>
+            <p class="eyebrow">实验预约</p>
+            <h2>用一张页面完成预约、查看冲突和追踪后续提醒</h2>
+            <p class="muted">
+              前端适配 Cloudflare Pages，后端 API 与定时提醒适配 Cloudflare Workers + D1。
+            </p>
+          </div>
+          <div class="hero-stat">
+            <span>提醒策略</span>
+            <strong>开始前 30 分钟</strong>
+          </div>
+        </section>
+
+        <section class="panel diagnostics-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">连接自检</p>
+              <h3>用来判断其他设备是缓存旧页还是接口未通</h3>
+            </div>
+          </div>
+          <div id="diagnostics-grid" class="diagnostics-grid"></div>
+        </section>
+
+        <section class="placeholder-grid">
+          <article class="placeholder-card" id="rules">
+            <h3>实验室规则</h3>
+            <p>后续可补充仪器使用、预约优先级、耗材登记与违约规则。</p>
+          </article>
+          <article class="placeholder-card" id="safety">
+            <h3>安全培训及准入</h3>
+            <p>后续可接入安全培训记录、准入名单与钉钉审批流。</p>
+          </article>
+          <article class="placeholder-card" id="equipment">
+            <h3>设备培训</h3>
+            <p>后续可细化到每台设备的培训状态、导师授权与操作证据。</p>
+          </article>
+          <article class="placeholder-card" id="contacts">
+            <h3>常用联系方式</h3>
+            <p>后续可补充管理员、设备负责人、安全员与维修联系人。</p>
+          </article>
+        </section>
+
+        <section class="booking-layout" id="booking">
+          <section class="panel form-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">新建预约</p>
+                <h3>固定流程：预约人 → 项目 → 时间 → 备注</h3>
+              </div>
+              <div class="pill">MVP</div>
+            </div>
+
+            <form id="booking-form" class="booking-form">
+              <div class="field">
+                <label for="user-search">1. 预约人</label>
+                <input
+                  id="user-search"
+                  name="user_search"
+                  type="text"
+                  placeholder="输入姓名或学号搜索"
+                  autocomplete="off"
+                />
+                <div id="user-results" class="search-results"></div>
+                <div id="selected-user" class="selected-chip empty">尚未选择预约人</div>
+              </div>
+
+              <div class="field">
+                <label for="item-select">2. 预约项目</label>
+                <select id="item-select" name="item_id" required>
+                  <option value="">请选择预约项目</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="booking-date">3. 预约日期</label>
+                <input id="booking-date" name="booking_date" type="date" required />
+              </div>
+
+              <div class="field">
+                <label>常用时间段</label>
+                <div id="preset-slots" class="slot-grid"></div>
+                <div class="slot-tip">选择“自定义时间段”后，可手动输入开始和结束时间。</div>
+              </div>
+
+              <div class="field inline-fields">
+                <div>
+                  <label for="custom-start">开始时间</label>
+                  <input id="custom-start" name="custom_start" type="time" required />
+                </div>
+                <div>
+                  <label for="custom-end">结束时间</label>
+                  <input id="custom-end" name="custom_end" type="time" required />
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="remark-type">4. 备注</label>
+                <select id="remark-type" name="remark_type">
+                  <option value="">无备注</option>
+                  <option value="培训">培训</option>
+                  <option value="参观">参观</option>
+                  <option value="在有人陪同下的代预约">在有人陪同下的代预约</option>
+                  <option value="检修中">检修中</option>
+                  <option value="其他">其他</option>
+                </select>
+              </div>
+
+              <div class="field hidden" id="remark-detail-wrap">
+                <label for="remark-detail">补充说明</label>
+                <textarea
+                  id="remark-detail"
+                  name="remark_detail"
+                  rows="3"
+                  placeholder="仅在选择“其他”时填写"
+                ></textarea>
+              </div>
+
+              <button type="submit" class="primary-btn">提交预约</button>
+            </form>
+            <p id="form-message" class="message"></p>
+          </section>
+
+          <section class="panel board-panel">
+            <div class="panel-head board-head">
+              <div>
+                <p class="eyebrow">实时看板</p>
+                <h3>当前与未来预约</h3>
+              </div>
+              <div class="toolbar">
+                <select id="item-filter"></select>
+                <div class="view-switch" id="view-switch">
+                  <button data-view="day" class="active">一天</button>
+                  <button data-view="three">三天</button>
+                  <button data-view="week">一周</button>
+                  <button data-view="month">一月</button>
+                </div>
+              </div>
+            </div>
+            <div class="board-actions">
+              <button id="prev-range" class="ghost-btn">上一段</button>
+              <button id="today-range" class="ghost-btn">回到今天</button>
+              <button id="next-range" class="ghost-btn">下一段</button>
+              <strong id="range-label" class="range-label"></strong>
+            </div>
+            <div id="calendar-root" class="calendar-root"></div>
+          </section>
+        </section>
+
+        <section class="panel list-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">预约列表</p>
+              <h3>当前与未来记录</h3>
+            </div>
+          </div>
+          <div id="booking-list" class="booking-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="booking-detail-dialog" class="detail-dialog">
+      <div id="detail-body"></div>
+      <form method="dialog">
+        <button class="ghost-btn">关闭</button>
+      </form>
+    </dialog>
+
+    <script src="./app.js?v=20260703d"></script>
+  </body>
+</html>
+
